@@ -12,3 +12,4 @@ RUN chmod +x /usr/local/bin/entrypoint.sh
 
 RUN apk add --no-cache su-exec
 
+RUN docker-php-ext-install mysqli pdo pdo_mysql
