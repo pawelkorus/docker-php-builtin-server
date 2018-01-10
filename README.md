@@ -5,5 +5,5 @@ Built image:
 
 Run container:
 <code>
-docker run -e "LOCAL_USER_ID=1000" -v /root/.wordpress:/root-dir -d -p 127.0.0.1:8000:8000 php-builtin-server:latest
+docker run -e "LOCAL_USER_ID=1000" -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 php-builtin-server:latest
 </code>
