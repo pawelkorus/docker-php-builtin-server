@@ -1,5 +1,7 @@
 # docker-php-builtin-server
 
+This docker container is built so that it is possible to define user id for the php process when running container. This way it is easier to exchange files between container and host.
+
 ## building
 Built image:
 <code>docker build -t php-builtin-server:latest https://github.com/pawelkorus/docker-php-builtin-server.git</code>
