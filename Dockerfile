@@ -1,4 +1,5 @@
-FROM php:7.1-alpine
+ARG PHP_IMAGE=7.2-alpine
+FROM php:${PHP_IMAGE}
 
 EXPOSE 8000
 
