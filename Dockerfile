@@ -5,7 +5,7 @@ EXPOSE 8000
 VOLUME [ "/root-dir" ]
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["-S", "0.0.0.0:8000"]
+CMD ["php", "-S", "0.0.0.0:8000"]
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh

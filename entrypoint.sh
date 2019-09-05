@@ -11,4 +11,4 @@ adduser -s /bin/bash -u $USER_ID -D -h /root-dir user
 export HOME=/root-dir
 
 cd $HOME
-exec su-exec user php "$@"
+exec su-exec user "$@"
