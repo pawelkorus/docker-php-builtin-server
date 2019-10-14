@@ -18,7 +18,7 @@ RUN docker-php-ext-install mysqli pdo pdo_mysql
 COPY xdebug.ini $PHP_INI_DIR/conf.d/
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
-    && pecl install -o -f xdebug-2.5.5 \
+    && pecl install -o -f xdebug \
     && docker-php-ext-enable xdebug \
     && apk del .phpize-deps \
     && rm -rf /tmp/pear \
