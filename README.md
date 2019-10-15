@@ -1,6 +1,6 @@
 # docker-php-builtin-server
 
-This docker container is built so that it is possible to define user id for the php process when running container. This way it is easier to exchange files between container and host.
+docker container providing php builtin server with mysql, pdo and xdebug modules.
 
 ## building
 Built image:
@@ -24,4 +24,4 @@ PHP in this container is preconfigured with XDebug. This configuration enables "
 
 You can use default docker bridge network. In this case you have to use docker bridge host ip address when making HTTP request to php container.
 
-Another options is to use docker host network driver by using `--net host` parameter when executing `docker run` command. In this case container and host share the same network and 'debugger' port (9000) is visible from php container. You can use any ip address assigned to host when making HTTP request to php container. 
+Another options is to use docker host network driver by executing `docker run` command with additional `--net host` parameter. In this case container and host share the same network and 'debugger' port (9000) is visible from php container. You can use any ip address assigned to host when making HTTP request to php container. 
