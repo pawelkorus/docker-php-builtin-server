@@ -20,9 +20,8 @@ docker run --rm -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 --user $(id -u):$(
 </code>
 
 ## xdebug
-PHP in this container is preconfigured with xdebug. It expects listening xdebug server on port 9093. The key for xdebug session is phpstorm.
+PHP in this container is preconfigured with XDebug. This configuration enables "remote connect back mode" (see https://xdebug.org/docs/remote). In this mode XDebug detects 'debugger' ip address from incoming HTTP request headers. It also assumes that 'debugger' is listening on port 9000. With this setup you have few options that allow you to debug your application.
 
-XDebug session is not started automatically. You need to enter url with ```XDEBUG_SESSION_START``` parameter, e.g. ```http://127.0.0.1:80000/index.php?XDEBUG_SESSION_START=phpstorm```
+You can use default docker bridge network. In this case you have to use docker bridge host ip address when making HTTP request to php container.
 
-
-
+Another options is to use docker host network driver by using `--net host` parameter when executing `docker run` command. In this case container and host share the same network and 'debugger' port (9000) is visible from php container. You can use any ip address assigned to host when making HTTP request to php container. 
