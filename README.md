@@ -4,7 +4,7 @@ docker container providing php builtin server with mysql, pdo and xdebug modules
 
 ## building
 Built image:
-<code>docker build -t php-builtin-server:latest https://github.com/pawelkorus/docker-php-builtin-server.git</code>
+<code>docker build -t php-builtin-server:latest https://github.com/tbreuss/docker-php-builtin-server.git</code>
 
 You may use ```--build-arg PHP_IMAGE=<version>``` to specify base php image version.
 
