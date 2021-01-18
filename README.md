@@ -14,6 +14,11 @@ If you want to run php builtin server that serves content in current working dir
 docker run --rm -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 php-builtin-server:latest
 </code>
 
+You can specify document root for built-in web server using the `docroot` environment parameter.
+<code>
+docker run --rm -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 -e docroot=public_html php-builtin-server:latest
+</code>
+
 Use --user option to setup user/group id for php builtin server process
 <code>
 docker run --rm -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 --user $(id -u):$(id -g) php-builtin-server:latest
