@@ -1,6 +1,8 @@
 ARG PHP_IMAGE=7.2-alpine
 FROM php:${PHP_IMAGE}
 
+ENV docroot="."
+
 EXPOSE 8000
 
 VOLUME [ "/root-dir" ]
@@ -20,4 +22,4 @@ COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD ["php", "-S", "0.0.0.0:8000"]
+CMD php -S 0.0.0.0:8000 -t $docroot
