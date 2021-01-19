@@ -24,6 +24,42 @@ Use --user option to setup user/group id for php builtin server process
 docker run --rm -v "$PWD":/root-dir -d -p 127.0.0.1:8000:8000 --user $(id -u):$(id -g) php-builtin-server:latest
 </code>
 
+## Docker Compose
+
+Of course it's possible to use this image together with docker compose.
+The most simple use case looks like this:
+
+~~~
+version: '3.5'
+services:
+  php:
+    build: https://github.com/tbreuss/docker-php-builtin-server.git
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/root-dir
+~~~
+
+A more extended version using PHP8 and a separate docroot path looks like this.
+
+~~~
+version: '3.5'
+
+services:
+
+  php:
+    build:
+      context: https://github.com/tbreuss/docker-php-builtin-server.git
+      args:
+        - PHP_IMAGE=8.0-alpine
+    environment:
+      - docroot=web
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/root-dir
+~~~ 
+
 ## xdebug
 PHP in this container is preconfigured with XDebug. This configuration enables "remote connect back mode" (see https://xdebug.org/docs/remote). In this mode XDebug detects 'debugger' ip address from incoming HTTP request headers. It also assumes that 'debugger' is listening on port 9000. With this setup you have few options that allow you to debug your application.
 
