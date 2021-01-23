@@ -1,0 +1,8 @@
+version: '3.5'
+services:
+  php:
+    build: https://github.com/tbreuss/docker-php-builtin-server.git
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/root-dir
