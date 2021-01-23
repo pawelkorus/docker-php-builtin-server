@@ -1,6 +1,7 @@
 version: '3.5'
 services:
   php:
+    container_name: php7.2-xdebug
     build: https://github.com/tbreuss/docker-php-builtin-server.git
     ports:
       - "8000:8000"
