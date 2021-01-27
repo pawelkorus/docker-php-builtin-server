@@ -7,7 +7,7 @@ EXPOSE 8000
 
 VOLUME [ "/root-dir" ]
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql
+RUN docker-php-ext-install gd mysqli pdo pdo_mysql
 
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
