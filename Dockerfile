@@ -7,12 +7,12 @@ EXPOSE 8000
 
 VOLUME [ "/root-dir" ]
 
-RUN docker-php-ext-install mysqli pdo pdo_mysql
-
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && export CFLAGS="$PHP_CFLAGS" CPPFLAGS="$PHP_CPPFLAGS" LDFLAGS="$PHP_LDFLAGS" \
+    && apk --no-cache add --virtual .ext-deps libjpeg-turbo-dev libpng-dev \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql \
     && pecl install -o -f xdebug \
     && docker-php-ext-enable xdebug \
+    && apk del .ext-deps \
     && apk del .phpize-deps \
     && rm -rf /tmp/pear
 
