@@ -12,7 +12,6 @@ RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && docker-php-ext-install gd mysqli pdo pdo_mysql \
     && pecl install -o -f xdebug \
     && docker-php-ext-enable xdebug \
-    && apk del .ext-deps \
     && apk del .phpize-deps \
     && rm -rf /tmp/pear
 
