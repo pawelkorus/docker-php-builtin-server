@@ -1,4 +1,4 @@
-ARG PHP_IMAGE=7.2-alpine
+ARG PHP_IMAGE=7.4-alpine
 FROM php:${PHP_IMAGE}
 
 ENV docroot="."
@@ -7,9 +7,13 @@ EXPOSE 8000
 
 VOLUME [ "/root-dir" ]
 
+# see https://github.com/php/php-src/blob/PHP-7.4/UPGRADING#L766-L775
+# with PHP-7.4+ "docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/"
+# has changed to "docker-php-ext-configure gd --with-freetype --with-jpeg"
+
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
     && apk --no-cache add --virtual .ext-deps freetype-dev libjpeg-turbo-dev libpng-dev \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd mysqli pdo pdo_mysql \
     && pecl install -o -f xdebug \
     && docker-php-ext-enable xdebug \
