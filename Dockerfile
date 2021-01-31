@@ -12,9 +12,9 @@ VOLUME [ "/root-dir" ]
 # has changed to "docker-php-ext-configure gd --with-freetype --with-jpeg"
 
 RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && apk --no-cache add --virtual .ext-deps freetype-dev libjpeg-turbo-dev libpng-dev \
+    && apk --no-cache add --virtual .ext-deps freetype-dev libjpeg-turbo-dev libpng-dev icu-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql \
+    && docker-php-ext-install gd mysqli pdo pdo_mysql intl \
     && pecl install -o -f xdebug \
     && docker-php-ext-enable xdebug \
     && apk del .phpize-deps \
