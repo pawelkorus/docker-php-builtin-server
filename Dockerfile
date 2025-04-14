@@ -1,29 +1,64 @@
-ARG PHP_IMAGE=7.4-alpine
+ARG PHP_IMAGE=8.1-alpine
 FROM php:${PHP_IMAGE}
 
-ENV docroot="."
+ENV DOCUMENT_ROOT="."
 
 EXPOSE 8000
 
 VOLUME [ "/root-dir" ]
 
-# see https://github.com/php/php-src/blob/PHP-7.4/UPGRADING#L766-L775
-# with PHP-7.4+ "docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/"
-# has changed to "docker-php-ext-configure gd --with-freetype --with-jpeg"
+# See https://github.com/joseluisq/alpine-php-fpm/tree/master/8.1-fpm
 
-RUN apk add --no-cache --virtual .phpize-deps $PHPIZE_DEPS \
-    && apk --no-cache add --virtual .ext-deps freetype-dev libjpeg-turbo-dev libpng-dev icu-dev \
-    && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd mysqli pdo pdo_mysql intl \
-    && pecl install -o -f xdebug \
+# Install build dependencies
+RUN set -eux \
+    && apk add --no-cache --update linux-headers --virtual .build-deps $PHPIZE_DEPS \
+        freetype-dev \
+        libjpeg-turbo-dev \
+        libpng-dev \
+        libwebp-dev \
+        icu-dev \
+        libxpm-dev \
+    && true
+
+# Install PHP extensions
+RUN set -eux \
+    \
+    # Install gd
+    && ln -s /usr/lib/$(apk --print-arch)-linux-gnu/libXpm.* /usr/lib/ \
+    && docker-php-ext-configure gd \
+        --enable-gd \
+        --with-webp \
+        --with-jpeg \
+        --with-xpm \
+        --with-freetype \
+        --enable-gd-jis-conv \
+    && docker-php-ext-install -j$(nproc) gd \
+    \
+    # Install intl
+    && docker-php-ext-install -j$(nproc) intl \
+    \
+    # Install mysqli
+    && docker-php-ext-install -j$(nproc) mysqli \
+    \
+    # Install pdo
+    && docker-php-ext-install -j$(nproc) pdo \
+    && docker-php-ext-install -j$(nproc) pdo_mysql \
+    \
+    # Install xdebug
+    && pecl install xdebug \
     && docker-php-ext-enable xdebug \
-    && apk del .phpize-deps \
-    && rm -rf /tmp/pear
+    \
+    # Clean up build dependencies
+    && docker-php-source delete \
+    && apk del .build-deps \
+    && rm -rf /tmp/* \
+    && true
 
-COPY xdebug.ini $PHP_INI_DIR/conf.d/
+# Install composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD php -S 0.0.0.0:8000 -t $docroot
+CMD php -S 0.0.0.0:8000 -t $DOCUMENT_ROOT
