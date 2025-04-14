@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  php:
+    container_name: php7.3-xdebug
+    build:
+      context: https://github.com/tbreuss/docker-php-builtin-server.git
+      args:
+        - PHP_IMAGE=7.3-alpine
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/root-dir
