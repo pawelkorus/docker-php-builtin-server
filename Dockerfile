@@ -67,6 +67,7 @@ VOLUME [ "/root-dir" ]
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 COPY --from=build /usr/local/lib/php/extensions/* /usr/local/lib/php/extensions
 COPY --from=build /usr/local/etc/php/conf.d/* /usr/local/lib/php/conf.d
+RUN cp /usr/local/etc/php/php.ini-development /usr/local/etc/php/php.ini
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
