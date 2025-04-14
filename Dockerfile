@@ -1,17 +1,18 @@
-ARG PHP_IMAGE=8.1-alpine
-FROM php:${PHP_IMAGE}
+ARG PHP_VERSION="8.1"
 
-ENV DOCUMENT_ROOT="."
+FROM php:${PHP_VERSION}-alpine as base
 
-EXPOSE 8000
+RUN set -eux && apk update --no-cache
 
-VOLUME [ "/root-dir" ]
+
+FROM base as build
 
 # See https://github.com/joseluisq/alpine-php-fpm/tree/master/8.1-fpm
 
 # Install build dependencies
 RUN set -eux \
-    && apk add --no-cache --update linux-headers --virtual .build-deps $PHPIZE_DEPS \
+    && apk add --no-cache --update --virtual .build-deps $PHPIZE_DEPS \
+        linux-headers \     
         freetype-dev \
         libjpeg-turbo-dev \
         libpng-dev \
@@ -54,11 +55,21 @@ RUN set -eux \
     && rm -rf /tmp/* \
     && true
 
-# Install composer
+
+FROM base as target
+
+ENV DOCUMENT_ROOT="."
+
+EXPOSE 80
+
+VOLUME [ "/root-dir" ]
+
 COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=build /usr/local/lib/php/extensions/* /usr/local/lib/php/extensions
+COPY --from=build /usr/local/etc/php/conf.d/* /usr/local/lib/php/conf.d
 
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["entrypoint.sh"]
-CMD php -S 0.0.0.0:8000 -t $DOCUMENT_ROOT
+CMD php -S 0.0.0.0:80 -t $DOCUMENT_ROOT
